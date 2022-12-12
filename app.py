@@ -30,7 +30,7 @@ def load_bert_model(name='distilbert-base-nli-stsb-mean-tokens'):
 
 @st.cache
 def load_faiss_index():
-    with open('faiss_index.pickle', 'rb') as h:
+    with open('faiss_index_esco.pickle', 'rb') as h:
         return pickle.load(h)
 
 def vector_search(query, model, index, num_results=10):
