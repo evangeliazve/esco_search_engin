@@ -8,7 +8,7 @@ import numpy as np
 
 #@st.cache
 def read_data():
-    with open('campaign_objects_list.pickle', 'rb') as h:
+    with open('fonctions_list.pickle', 'rb') as h:
         return pickle.load(h)
 
 #@st.cache
