@@ -61,18 +61,13 @@ def main():
     user_input = st.sidebar.text_area("Search by query")
     num_results = st.sidebar.slider("Number of search results", 10, 150, 10)
 
-    encoded_user_input = vector_search([user_input], model, faiss_index, num_results)
-    frame = data[data.index.isin(encoded_user_input)]
+    if st.button("Search"):       
+
+       encoded_user_input = vector_search([user_input], model, faiss_index, num_results)
+       data = pd.DataFrame(data)
+       data["id"] = data.index
+       frame = data[data.id.isin(encoded_user_input)]    
+       st.write(frame)
     
-    st.subheader("How to use this app")
-    st.write(frame)
-
-    st.subheader("About")
-    st.write(
-            f"""
-I I am Eva
-    """
-        )
-
 if __name__ == '__main__':
     main()
