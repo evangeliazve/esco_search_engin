@@ -55,11 +55,11 @@ def main():
     model = load_bert_model()
     faiss_index = faiss.deserialize_index(load_faiss_index())
        
-    st.title("Texts Explorer")
-    
+    st.title("Moteur de recherche fonctions")
+        
     # User search
-    user_input = st.sidebar.text_area("Search by query")
-    num_results = st.sidebar.slider("Number of search results", 10, 150, 10)
+    user_input = st.text_input("Search by query")
+    num_results = st.slider("Number of search results", 10, 150, 10)
 
     if st.button("Search"):       
 
