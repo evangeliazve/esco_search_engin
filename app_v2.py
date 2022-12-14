@@ -15,13 +15,14 @@ def main():
 
     # Use the `await st.compute` method to run the BERT model in the background
     # and generate autocomplete suggestions
-    suggestions = await st.compute(
-        generate_suggestions,
-        text_input=text_input,
-        model=model,
-        tokenizer=tokenizer
-    )
-
+    async def suggestions():
+              await st.compute(
+                         generate_suggestions,
+                         text_input=text_input,
+                         model=model,
+                         tokenizer=tokenizer
+                           )
+    suggestions = suggestions()
     # Create a dropdown menu of suggestions using the `st.selectbox` method
     selected_suggestion = st.selectbox(
         "Select a suggestion:",
