@@ -1,10 +1,5 @@
 import streamlit as st
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering
-import streamlit as st
-from PIL import Image
-import pickle
-import altair as alt
-from sentence_transformers import SentenceTransformer
 
 # Use the AutoTokenizer and AutoModelForQuestionAnswering classes
 # to load the BERT tokenizer and model
@@ -20,5 +15,8 @@ tokens = tokenizer.tokenize(text_input)
 # Use the BERT model to predict the most likely completion for the input text
 prediction = model.predict(tokens)
 
-# Display the predicted completion in a Streamlit output field
-st.write("Predicted completion:", prediction)
+# Use the `search` method to find indexed results that match the predicted completion
+results = model.search(prediction)
+
+# Display the search results in a Streamlit output field
+st.write("Search results:", results)
