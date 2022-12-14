@@ -1,8 +1,8 @@
 import streamlit as st
-from transformers import AutoTokenizer, AutoModelForQuestionAnswering
+from transformers import AutoTokenizer, AutoModelWithLMHead
 
 
-def main():
+async def main():
     import streamlit as st
     from transformers import AutoModelWithLMHead, AutoTokenizer
 
@@ -30,4 +30,6 @@ def main():
     )
 
 if __name__ == '__main__':
-    main()
+    main()    
+    
+main()
