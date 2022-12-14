@@ -1,5 +1,16 @@
 import streamlit as st
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering
+import streamlit as st
+from PIL import Image
+import pickle
+import altair as alt
+from sentence_transformers import SentenceTransformer
+from nltk.corpus import stopwords
+import matplotlib.pyplot as plt
+import faiss
+import pandas as pd
+import numpy as np
+import nltk
 
 # Use the AutoTokenizer and AutoModelForQuestionAnswering classes
 # to load the BERT tokenizer and model
@@ -17,7 +28,3 @@ prediction = model.predict(tokens)
 
 # Display the predicted completion in a Streamlit output field
 st.write("Predicted completion:", prediction)
-
-    
-if __name__ == '__main__':
-    main()
