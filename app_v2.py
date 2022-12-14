@@ -2,7 +2,7 @@ import streamlit as st
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering
 
 
-def main():
+async def main():
     import streamlit as st
     from transformers import AutoModelWithLMHead, AutoTokenizer
 
