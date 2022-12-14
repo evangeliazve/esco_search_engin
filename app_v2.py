@@ -3,9 +3,7 @@ from transformers import AutoTokenizer, AutoModelWithLMHead
 
 
 async def main():
-    import streamlit as st
-    from transformers import AutoModelWithLMHead, AutoTokenizer
-
+    
     # Load the BERT model and tokenizer
     model = AutoModelWithLMHead.from_pretrained("bert-base-cased")
     tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
@@ -30,6 +28,4 @@ async def main():
     )
 
 if __name__ == '__main__':
-    main()    
-    
-main()
+    main()
