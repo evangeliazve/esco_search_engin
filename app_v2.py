@@ -2,7 +2,7 @@ import streamlit as st
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering
 
 
-async def main():
+def main():
     import streamlit as st
     from transformers import AutoModelWithLMHead, AutoTokenizer
 
@@ -22,9 +22,13 @@ async def main():
         tokenizer=tokenizer
     )
 
-    # Display the autocomplete suggestions
-    for result in autocomplete_results:
-        st.write(result)
-    
+    # Create a dropdown menu of suggestions using the `st.selectbox` method
+    selected_suggestion = st.selectbox(
+        "Select a suggestion:",
+        autocomplete_results,
+        index=0,
+        key="selected_suggestion"
+    )
+
 if __name__ == '__main__':
     main()
