@@ -24,7 +24,7 @@ def read_data():
 #    return list(df[df['level']==level].name.value_counts().index[:num])
 
 @st.cache(allow_output_mutation=True)
-def load_bert_model(name='sentence-transformers/distilbert-base-nli-stsb-mean-tokens'):
+def load_bert_model(name='sentence-transformers/msmarco-distilroberta-base-v2'):
     # Instantiate the sentence-level DistilBERT
     return SentenceTransformer(name)
 
