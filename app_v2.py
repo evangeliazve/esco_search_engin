@@ -15,8 +15,5 @@ tokens = tokenizer.tokenize(text_input)
 # Use the BERT model to predict the most likely completion for the input text
 prediction = model.predict(tokens)
 
-# Use the `search` method to find indexed results that match the predicted completion
-results = model.search(prediction)
-
-# Display the search results in a Streamlit output field
-st.write("Search results:", results)
+# Display the predicted completion in a Streamlit output field
+st.write("Predicted completion:", prediction)
