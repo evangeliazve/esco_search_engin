@@ -1,4 +1,5 @@
 import streamlit as st
+import asyncio
 from transformers import AutoTokenizer, AutoModelWithLMHead
 
 
