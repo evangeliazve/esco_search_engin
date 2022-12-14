@@ -15,7 +15,7 @@ def main():
 
     # Use the `await st.compute` method to run the BERT model in the background
     # and generate autocomplete suggestions
-    autocomplete_results = await st.compute(
+    autocomplete_results = st.compute(
         generate_autocomplete_suggestions,
         text_input=text_input,
         model=model,
