@@ -5,12 +5,6 @@ from PIL import Image
 import pickle
 import altair as alt
 from sentence_transformers import SentenceTransformer
-from nltk.corpus import stopwords
-import matplotlib.pyplot as plt
-import faiss
-import pandas as pd
-import numpy as np
-import nltk
 
 # Use the AutoTokenizer and AutoModelForQuestionAnswering classes
 # to load the BERT tokenizer and model
