@@ -10,32 +10,21 @@ import pandas as pd
 from transformers import AutoModelWithLMHead, AutoTokenizer
 from scipy.spatial import distance
 
-model = AutoModelWithLMHead.from_pretrained("bert-base-cased")
-tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
+import transformers
 
-st.title("Autosuggestion App")
+# Load the BERT model
+model = transformers.BertModel.from_pretrained('bert-base-cased')
 
-data = ["apple", "banana", "orange", "grape", "strawberry"]
+def get_autocompletion_suggestions(input_text, suggestion_list, top_k=5):
+    input_ids = transformers.BertTokenizer.from_pretrained('bert-base-cased').encode(input_text, return_tensors='pt')
+    output = model(input_ids)[0]
+    # Use Faiss to find the top k semantically similar suggestions from the suggestion list
+    index = faiss.IndexFlatL2(output.shape[1])
+    index.add(output)
+    distances, indices = index.search(output, top_k)
+    return [suggestion_list[i] for i in indices[0]]
 
-input_text = st.text_input("Enter at least 2 characters")
-suggestions = []
-
-if len(input_text) > 1:
-  input_tokens = tokenizer.encode(input_text, return_tensors="pt").to("cpu")
-  input_vec = model(input_tokens)[0][0][0]
-  suggestions = []
-  for item in data:
-    item_tokens = tokenizer.encode(item, return_tensors="pt").to("cpu")
-    item_vec = model(item_tokens)[0][0][0]
-    sim = distance.cosine(input_vec, item_vec)
-    if sim < 0.5:
-      suggestions.append(item)
-  suggestions = sorted(suggestions, key=lambda x: distance.cosine(input_tokens, tokenizer.encode(x)))
-
-st.write("Suggestions:", suggestions)
-
-custom_text = st.text_input("Enter your own text")
-if custom_text != "":
-  st.write("You entered:", custom_text)
-
-st.run()
+input_text = st.text_input("Enter your text:")
+if input_text:
+    suggestions = get_autocompletion_suggestions(input_text, suggestion_list)
+    st.write(f'Autocompletion suggestions: {suggestions}')
