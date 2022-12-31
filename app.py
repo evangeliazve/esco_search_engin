@@ -59,7 +59,6 @@ def main():
         
     # User search
     user_input = st.text_input("Search by query")
-    num_results = st.slider("Number of search results", 10, 150, 10)
     encoded_user_input = vector_search([user_input], model, faiss_index, num_results)
     data = pd.DataFrame(data)
     data["id"] = data.index
