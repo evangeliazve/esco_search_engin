@@ -32,7 +32,7 @@ def load_bert_model(name='all-MiniLM-L6-v2'):
 def load_faiss_index():
     with open('faiss_index_esco.pickle', 'rb') as h:
         return pickle.load(h)
-
+@st.cache
 def vector_search(query, model, index, num_results=10):
     """Tranforms query to vector using a pretrained, sentence-level 
     DistilBERT model and finds similar vectors using FAISS.
