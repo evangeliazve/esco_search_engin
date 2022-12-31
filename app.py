@@ -65,7 +65,6 @@ def main():
     data["id"] = data.index
     frame = data[data.id.isin(encoded_user_input)]    
     st.write(frame)
-    time.sleep(10)
     
 if __name__ == '__main__':
     main()
