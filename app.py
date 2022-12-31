@@ -48,9 +48,8 @@ def vector_search(query, model, index, num_results=10):
     """
     vector = model.encode(list(query))
     D, I = index.search(np.array(vector).astype("float32"), k=20)
-    return [i for i in I[0]]
+    return [i for i,j in enumerate(I[0]) if D[j] > 0.5]
 
-@st.cache
 def main():
     data = read_data()
     model = load_bert_model()
