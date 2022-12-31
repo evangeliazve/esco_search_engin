@@ -47,7 +47,7 @@ def vector_search(query, model, index, num_results=10):
     
     """
     vector = model.encode(list(query))
-    D, I = index.search(np.array(vector).astype("float32"), k=num_results)
+    D, I = index.search(np.array(vector).astype("float32"), k=20)
     return [i for i in I[0]]
 
 def main():
@@ -59,7 +59,7 @@ def main():
         
     # User search
     user_input = st.text_input("Search by query")
-    encoded_user_input = vector_search([user_input], model, faiss_index, num_results)
+    encoded_user_input = vector_search([user_input], model, faiss_index)
     data = pd.DataFrame(data)
     data["id"] = data.index
     frame = data[data.id.isin(encoded_user_input)]    
