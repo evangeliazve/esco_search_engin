@@ -50,6 +50,23 @@ def vector_search(query, model, index, num_results=10):
     D, I = index.search(np.array(vector).astype("float32"), k=5)
     return [j for i,j in enumerate(I[0]) if D[0][i] < 0.5]
 
+def vector_search_d(query, model, index, num_results=10):
+    """Tranforms query to vector using a pretrained, sentence-level 
+    DistilBERT model and finds similar vectors using FAISS.
+    Args:
+        query (str): User query that should be more than a sentence long.
+        model (sentence_transformers.SentenceTransformer.SentenceTransformer)
+        index (`numpy.ndarray`): FAISS index that needs to be deserialized.
+        num_results (int): Number of results to return.
+    Returns:
+        D (:obj:`numpy.array` of `float`): Distance between results and query.
+        I (:obj:`numpy.array` of `int`): Paper ID of the results.
+    
+    """
+    vector = model.encode(list(query))
+    D, I = index.search(np.array(vector).astype("float32"), k=5)
+    return [j for i,j in enumerate(D[0]) if D[0][i] < 0.5]
+
 def main():
     data = read_data()
     model = load_bert_model()
@@ -60,9 +77,12 @@ def main():
     # User search
     user_input = st.text_input("Search by query")
     encoded_user_input = vector_search([user_input], model, faiss_index)
+    encoded_user_input_d = vector_search_d([user_input], model, faiss_index)
     data = pd.DataFrame(data)
     data["id"] = data.index
-    frame = data[data.id.isin(encoded_user_input)]    
+    frame_1 = data[data.id.isin(encoded_user_input)] 
+    frame_2 = data[data.id.isin(encoded_user_input_d)]
+    frame = pd.merge(frame_1, frame_2, on = "id")
     st.write(frame)
              
 if __name__ == '__main__':
