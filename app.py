@@ -10,6 +10,9 @@ import pandas as pd
 from transformers import AutoModelWithLMHead, AutoTokenizer
 from scipy.spatial import distance
 
+model = AutoModelWithLMHead.from_pretrained("bert-base-cased")
+tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
+
 st.title("Autosuggestion App")
 
 data = ["apple", "banana", "orange", "grape", "strawberry"]
