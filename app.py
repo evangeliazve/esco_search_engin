@@ -29,7 +29,3 @@ if len(input_text) > 1:
   suggestions = sorted(suggestions, key=lambda x: distance.cosine(input_tokens, tokenizer.encode(x)))
 
 st.write("Suggestions:", suggestions)
-
-custom_text = st.text_input("Enter your own text")
-if custom_text != "":
-  st.write("You entered:", custom_text)
