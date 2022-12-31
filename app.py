@@ -83,7 +83,7 @@ def main():
     frame_1 = data[data.id.isin(encoded_user_input)] 
     frame_2 = data[data.id.isin(encoded_user_input_d)]
     frame = pd.merge(frame_1, frame_2, on = "id")
-    st.write(frame)
+    st.write(frame_1)
              
 if __name__ == '__main__':
     main()
