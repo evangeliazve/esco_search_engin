@@ -58,14 +58,15 @@ def main():
     st.title("Moteur de recherche fonctions")
         
     # User search
-    user_input = st.text_input("Search by query")
+    
     while True:
+        user_input = st.text_input("Search by query")
         encoded_user_input = vector_search([user_input], model, faiss_index, num_results)
         data = pd.DataFrame(data)
         data["id"] = data.index
         frame = data[data.id.isin(encoded_user_input)]    
         st.write(frame)
-        time.sleep(1)
+        time.sleep(10)
     
 if __name__ == '__main__':
     main()
