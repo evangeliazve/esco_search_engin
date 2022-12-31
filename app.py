@@ -14,7 +14,7 @@ import transformers
 
 # Load the BERT model
 model = transformers.BertModel.from_pretrained('bert-base-cased')
-
+suggestion_list = ["apple", "banana","vegatable", "data scientist", "data analyst"]
 def get_autocompletion_suggestions(input_text, suggestion_list, top_k=5):
     input_ids = transformers.BertTokenizer.from_pretrained('bert-base-cased').encode(input_text, return_tensors='pt')
     output = model(input_ids)[0]
