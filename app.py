@@ -66,4 +66,4 @@ while True:
     data["id"] = data.index
     frame = data[data.id.isin(encoded_user_input)]    
     st.write(frame)
-    time.sleep(1)
+    time.sleep(5)
