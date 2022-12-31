@@ -48,7 +48,7 @@ def vector_search(query, model, index, num_results=10):
     """
     vector = model.encode(list(query))
     D, I = index.search(np.array(vector).astype("float32"), k=5)
-    return [j for i,j in enumerate(I[0]) if D[0][i] < 0.5]
+    return [j for i,j in enumerate(I[0])]
 
 def vector_search_d(query, model, index, num_results=10):
     """Tranforms query to vector using a pretrained, sentence-level 
@@ -65,7 +65,7 @@ def vector_search_d(query, model, index, num_results=10):
     """
     vector = model.encode(list(query))
     D, I = index.search(np.array(vector).astype("float32"), k=5)
-    return [j for i,j in enumerate(D[0]) if D[0][i] < 0.5]
+    return [j for i,j in enumerate(D[0])]
 
 def main():
     data = read_data()
