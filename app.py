@@ -50,6 +50,7 @@ def vector_search(query, model, index, num_results=10):
     D, I = index.search(np.array(vector).astype("float32"), k=20)
     return [i for i in I[0]]
 
+@st.cache
 def main():
     data = read_data()
     model = load_bert_model()
