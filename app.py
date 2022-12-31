@@ -6,68 +6,30 @@ import faiss
 import pandas as pd
 import numpy as np
 
-#@st.cache
-def read_data():
-    with open('fonctions_list.pickle', 'rb') as h:
-        return pickle.load(h)
+import pandas as pd
+from transformers import AutoModelWithLMHead, AutoTokenizer
+from scipy.spatial import distance
 
-#@st.cache
-#def read_author_data():
-#    with open('author_data.pickle', 'rb') as h:
-#        return pickle.load(h)
-    
-#@st.cache
-#def unique_fos_level(df):
- #   return sorted(df['level'].unique())[1:]
+model = AutoModelWithLMHead.from_pretrained("bert-base-cased")
+tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
 
-#def unique_fos(df, level, num):
-#    return list(df[df['level']==level].name.value_counts().index[:num])
+st.title("Autosuggestion App")
 
-@st.cache(allow_output_mutation=True)
-def load_bert_model(name='all-MiniLM-L6-v2'):
-    # Instantiate the sentence-level DistilBERT
-    return SentenceTransformer(name)
+data = ["apple", "banana", "orange", "grape", "strawberry"]
 
-@st.cache
-def load_faiss_index():
-    with open('faiss_index_esco.pickle', 'rb') as h:
-        return pickle.load(h)
+input_text = st.text_input("Enter at least 2 characters")
+suggestions = []
 
-def vector_search(query, model, index, num_results=10):
-    """Tranforms query to vector using a pretrained, sentence-level 
-    DistilBERT model and finds similar vectors using FAISS.
-    Args:
-        query (str): User query that should be more than a sentence long.
-        model (sentence_transformers.SentenceTransformer.SentenceTransformer)
-        index (`numpy.ndarray`): FAISS index that needs to be deserialized.
-        num_results (int): Number of results to return.
-    Returns:
-        D (:obj:`numpy.array` of `float`): Distance between results and query.
-        I (:obj:`numpy.array` of `int`): Paper ID of the results.
-    
-    """
-    vector = model.encode(list(query))
-    D, I = index.search(np.array(vector).astype("float32"), k=num_results)
-    return [i for i in I[0]]
+if len(input_text) > 1:
+  input_tokens = tokenizer.encode(input_text, return_tensors="pt").to("cpu")
+  output = model.generate(input_tokens, max_length=20, top_p=0.9, top_k=10, temperature=0.8)
+  output_text = tokenizer.decode(output[0], skip_special_tokens=True)
+  suggestions = output_text.split(" ")
+  suggestions = [s for s in suggestions if s in data]
+  suggestions = sorted(suggestions, key=lambda x: distance.cosine(input_tokens, tokenizer.encode(x)))
 
-def main():
-    data = read_data()
-    model = load_bert_model()
-    faiss_index = faiss.deserialize_index(load_faiss_index())
-       
-    st.title("Moteur de recherche fonctions")
-        
-    # User search
-    user_input = st.text_input("Search by query")
-    num_results = st.slider("Number of search results", 10, 150, 10)
+st.write("Suggestions:", suggestions)
 
-    if st.button("Search"):       
-
-       encoded_user_input = vector_search([user_input], model, faiss_index, num_results)
-       data = pd.DataFrame(data)
-       data["id"] = data.index
-       frame = data[data.id.isin(encoded_user_input)]    
-       st.write(frame)
-    
-if __name__ == '__main__':
-    main()
+custom_text = st.text_input("Enter your own text")
+if custom_text != "":
+  st.write("You entered:", custom_text)
