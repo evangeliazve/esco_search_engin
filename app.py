@@ -6,25 +6,68 @@ import faiss
 import pandas as pd
 import numpy as np
 
-import pandas as pd
-from transformers import AutoModelWithLMHead, AutoTokenizer
-from scipy.spatial import distance
+#@st.cache
+def read_data():
+    with open('fonctions_list.pickle', 'rb') as h:
+        return pickle.load(h)
 
-import transformers
+#@st.cache
+#def read_author_data():
+#    with open('author_data.pickle', 'rb') as h:
+#        return pickle.load(h)
+    
+#@st.cache
+#def unique_fos_level(df):
+ #   return sorted(df['level'].unique())[1:]
 
-# Load the BERT model
-model = transformers.BertModel.from_pretrained('bert-base-cased')
-suggestion_list = ["apple", "banana","vegatable", "data scientist", "data analyst"]
-def get_autocompletion_suggestions(input_text, suggestion_list, top_k=5):
-    input_ids = transformers.BertTokenizer.from_pretrained('bert-base-cased').encode(input_text, return_tensors='pt')
-    output = model(input_ids)[0]
-    # Use Faiss to find the top k semantically similar suggestions from the suggestion list
-    index = faiss.IndexFlatL2(output.shape[1])
-    index.add(output)
-    distances, indices = index.search(output, top_k)
-    return [suggestion_list[i] for i in indices[0]]
+#def unique_fos(df, level, num):
+#    return list(df[df['level']==level].name.value_counts().index[:num])
 
-input_text = st.text_input("Enter your text:")
-if input_text:
-    suggestions = get_autocompletion_suggestions(input_text, suggestion_list)
-    st.write(f'Autocompletion suggestions: {suggestions}')
+@st.cache(allow_output_mutation=True)
+def load_bert_model(name='all-MiniLM-L6-v2'):
+    # Instantiate the sentence-level DistilBERT
+    return SentenceTransformer(name)
+
+@st.cache
+def load_faiss_index():
+    with open('faiss_index_esco.pickle', 'rb') as h:
+        return pickle.load(h)
+
+def vector_search(query, model, index, num_results=10):
+    """Tranforms query to vector using a pretrained, sentence-level 
+    DistilBERT model and finds similar vectors using FAISS.
+    Args:
+        query (str): User query that should be more than a sentence long.
+        model (sentence_transformers.SentenceTransformer.SentenceTransformer)
+        index (`numpy.ndarray`): FAISS index that needs to be deserialized.
+        num_results (int): Number of results to return.
+    Returns:
+        D (:obj:`numpy.array` of `float`): Distance between results and query.
+        I (:obj:`numpy.array` of `int`): Paper ID of the results.
+    
+    """
+    vector = model.encode(list(query))
+    D, I = index.search(np.array(vector).astype("float32"), k=num_results)
+    return [i for i in I[0]]
+
+def main():
+    data = read_data()
+    model = load_bert_model()
+    faiss_index = faiss.deserialize_index(load_faiss_index())
+       
+    st.title("Moteur de recherche fonctions")
+        
+    # User search
+    user_input = st.text_input("Search by query")
+    num_results = st.slider("Number of search results", 10, 150, 10)
+
+    if st.button("Search"):       
+
+       encoded_user_input = vector_search([user_input], model, faiss_index, num_results)
+       data = pd.DataFrame(data)
+       data["id"] = data.index
+       frame = data[data.id.isin(encoded_user_input)]    
+       st.write(frame)
+    
+if __name__ == '__main__':
+    main()
