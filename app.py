@@ -5,7 +5,6 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import pandas as pd
 import numpy as np
-import time
 
 #@st.cache
 def read_data():
@@ -51,17 +50,21 @@ def vector_search(query, model, index, num_results=10):
     D, I = index.search(np.array(vector).astype("float32"), k=num_results)
     return [i for i in I[0]]
 
-data = read_data()
-model = load_bert_model()
-faiss_index = faiss.deserialize_index(load_faiss_index())
+def main():
+    data = read_data()
+    model = load_bert_model()
+    faiss_index = faiss.deserialize_index(load_faiss_index())
        
-st.title("Moteur de recherche fonctions")
+    st.title("Moteur de recherche fonctions")
         
-# User search
-user_input = st.text_input("Search by query")
-
-encoded_user_input = vector_search([user_input], model, faiss_index, num_results)
-data = pd.DataFrame(data)
-data["id"] = data.index
-frame = data[data.id.isin(encoded_user_input)]    
-st.write(frame)
+    # User search
+    user_input = st.text_input("Search by query")
+    num_results = st.slider("Number of search results", 10, 150, 10)
+    encoded_user_input = vector_search([user_input], model, faiss_index, num_results)
+    data = pd.DataFrame(data)
+    data["id"] = data.index
+    frame = data[data.id.isin(encoded_user_input)]    
+    st.write(frame)
+    
+if __name__ == '__main__':
+    main()
