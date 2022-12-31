@@ -47,8 +47,8 @@ def vector_search(query, model, index, num_results=10):
     
     """
     vector = model.encode(list(query))
-    D, I = index.search(np.array(vector).astype("float32"), k=20)
-    return [j for i,j in enumerate(I[0]) if D[0][i] > 0.5]
+    D, I = index.search(np.array(vector).astype("float32"), k=5)
+    return [j for i,j in enumerate(I[0]) if D[0][i] < 0.1]
 
 def main():
     data = read_data()
