@@ -59,11 +59,13 @@ def main():
         
     # User search
     user_input = st.text_input("Search by query")
-    encoded_user_input = vector_search([user_input], model, faiss_index)
-    data = pd.DataFrame(data)
-    data["id"] = data.index
-    frame = data[data.id.isin(encoded_user_input)]    
-    st.write(frame)
+    while True:
+         encoded_user_input = vector_search([user_input], model, faiss_index)
+         data = pd.DataFrame(data)
+         data["id"] = data.index
+         frame = data[data.id.isin(encoded_user_input)]    
+         st.write(frame)
+         time.sleep(1)
     
 if __name__ == '__main__':
     main()
