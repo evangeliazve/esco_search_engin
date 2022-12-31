@@ -5,6 +5,7 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import pandas as pd
 import numpy as np
+import time
 
 #@st.cache
 def read_data():
